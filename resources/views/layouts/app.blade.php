@@ -19,6 +19,12 @@
         <link href="{{ asset('argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
+        <style>
+            .main-content .navbar-top {
+                position: relative;
+                background-color: #cf4d4da6;
+            }
+        </style>
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
