@@ -10,13 +10,8 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="ni ni-circle-08 text-pink"></i> {{ __('Posts') }}
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="ni ni-circle-08 text-pink"></i> {{ __('Categories') }}
+        <a class="nav-link" href="{{ route('vidu')}}">
+            <i class="ni ni-circle-08 text-pink"></i> {{ __('Vidu2') }}
         </a>
     </li>
 </ul>
