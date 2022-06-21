@@ -22,9 +22,6 @@ Auth::routes();
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
-	// Route::resource('posts', 'App\Http\Controllers\PostController');
-	Route::get('/vidu', function() {
-		return view('layouts.posts.index');
-	})->name('vidu');
+	Route::resource('posts', 'App\Http\Controllers\PostController');
 });
 

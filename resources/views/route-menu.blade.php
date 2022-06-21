@@ -5,13 +5,14 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('vidu')}}">
-            <i class="ni ni-circle-08 text-pink"></i> {{ __('Vidu') }}
+        <a class="nav-link" href="{{ route('posts.index')}}">
+            <i class="ni ni-circle-08 text-pink"></i> {{ __('Posts') }}
         </a>
     </li>
+    {{-- 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('vidu')}}">
             <i class="ni ni-circle-08 text-pink"></i> {{ __('Vidu2') }}
         </a>
-    </li>
+    </li> --}}
 </ul>
