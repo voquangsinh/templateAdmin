@@ -23,5 +23,8 @@ Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('posts', 'App\Http\Controllers\PostController');
+	Route::resource('roles', 'App\Http\Controllers\RoleController');
+	Route::resource('users', 'App\Http\Controllers\UserController');
+	Route::resource('permissions', 'App\Http\Controllers\PermissionController');
 });
 
