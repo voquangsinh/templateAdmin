@@ -12,6 +12,11 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Post::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,40 +24,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $col = [
-        //     'posts.*',
-        //     'users.name as user_name',
-        // ];
-
-        // $posts = Post::join('users', 'users.id', '=', 'posts.user_id')
-        //     ->where('user_id', Auth::user()->id)->get($col);
-
-        $post = Post::where('id', 5)->first();
-        $category =  Category::where('id', 2)->first();
-
-        //them attach
-        //xoa detach
-        //dong bo sync
-        //on-off  toggle
-        $post->category()->detach([2, 1]);
-            dd(123);
-        $posts = Post::with(['user.profile', 'category'])->get();
-        // $posts->load('user', 'user.profile');
-        // dd($posts);
-
-        // $posts = Post::with('user')->get();
-        // dd($posts);
-        $user = Auth::user();
-
-
-        $posts = $posts->filter(function ($post) use ($user) {
-            if ($user->id != 1) {
-                return $post->user_id == $user->id;
-            }
-            return $post;
-        });
-
-        return view('layouts.posts.index', ['posts' => $posts]);
+        return view('layouts.posts.index', ['posts' => Post::get()]);
     }
 
     /**
@@ -74,7 +46,6 @@ class PostController extends Controller
      */
     public function store(CreateUpdatePostRequest $request)
     {
-        // $category = Category::find($request->category);
         $data = [
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -150,7 +121,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         try {
-            
             $post->delete();
             return redirect()->route('posts.index')->with('success', 'Delete post successfuly');
         } catch (\Exception $e) {

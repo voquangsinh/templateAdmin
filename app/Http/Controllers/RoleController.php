@@ -74,7 +74,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        return view('layouts.roles.edit', ['role' => $role]);
+        return view('layouts.roles.edit', ['role' => $role, 'permissions' => Permission::get()]);
     }
 
     /**
@@ -86,12 +86,16 @@ class RoleController extends Controller
      */
     public function update(CreateUpdateRoleRequest $request, Role $role)
     {
+        Db::beginTransaction();
         try {
             $role->update($request->only(['name', 'description']));
+            $role->permissions()->sync($request->permissionIds);
+            Db::commit();
             return redirect()->route('roles.index')->with('success', 'Update role success');
         } catch (\Exception $e) {
             //throw $th;
             Log::error($e->getMessage());
+            DB::rollBack();
             return back()->with('error', 'Update role failed');
         }
     }

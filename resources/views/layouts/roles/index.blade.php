@@ -17,6 +17,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Permissions</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -31,6 +32,11 @@
                 </td>
                 <td>
                   {{ $role->description }}
+                </td>
+                <td>
+                  @foreach ($role->permissions as $permission)
+                      {{ $permission->name }} <br>
+                  @endforeach
                 </td>
                 <td>
                   <a href="{{ route('roles.show', ['role' => $role->id]) }}" class="btn btn-primary" type="button">View</a>

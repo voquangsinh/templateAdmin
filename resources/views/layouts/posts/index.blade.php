@@ -9,6 +9,11 @@
                   {{ session('success') }}
               </div>
           @endif
+          @if (session('error'))
+                <div class="alert alert-danger mt-2" role="alert">
+                  {{ session('error') }}
+              </div>
+          @endif
           <a href="{{ route('posts.create') }}" class="btn btn-primary my-3" type="button">Create Post</a>
           <div class="table-responsive">
             <table class="table align-items-center">

@@ -9,7 +9,7 @@
                   {{ session('success') }}
               </div>
           @endif
-          <a href="{{ route('users.create') }}" class="btn btn-primary my-3" type="button">Create role</a>
+          <a href="{{ route('users.create') }}" class="btn btn-primary my-3" type="button">Create User</a>
           <div class="table-responsive">
             <table class="table align-items-center">
             <thead class="thead-light">

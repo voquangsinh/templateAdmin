@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
-use App\Http\Requests\UserRequest;
 use App\Models\Role;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('layouts.users.create');
+        return view('layouts.users.create', ['roles' => Role::get()]);
     }
 
     /**
@@ -41,9 +42,27 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateUserRequest $request)
     {
-       
+       $password = Hash::make($request->password);
+       $data = array_merge($request->only('name', 'email'), [
+        'email_verified_at' => Carbon::now()->toDateTimeString(),
+        'password' => $password
+       ]);
+
+       DB::beginTransaction();
+       try {
+            $user = User::create($data);
+            if ($request->roleIds) {
+                $user->roles()->sync($request->roleIds);
+            }
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Create user success');
+       } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return back()->with('error', 'Create user failed');
+       }
     }
 
     /**
@@ -80,7 +99,9 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user->update($request->only('name'));
-            $user->roles()->sync($request->roleIds);
+            if ($request->roleIds) {
+                $user->roles()->sync($request->roleIds);
+            }
             DB::commit();
             return redirect()->route('users.index')->with('success', 'Update user success');
         } catch (\Exception $e) {
