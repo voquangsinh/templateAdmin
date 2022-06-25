@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Scopes\IsAuthorPostScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -18,15 +19,16 @@ class Post extends Model
         'slug'
     ];
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope(new IsAuthorPostScope);
-    }
+    // /**
+    //  * Global scope
+    //  * The "booted" method of the model.
+    //  *
+    //  * @return void
+    //  */
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope(new IsAuthorPostScope);
+    // }
 
     /**
      * Get the user that owns the Post
@@ -47,5 +49,17 @@ class Post extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Local scope
+     * Scope a query to only include popular users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIsAuthor($query)
+    {
+        return $query->where('user_id', '=', Auth::user()->id);
     }
 }
