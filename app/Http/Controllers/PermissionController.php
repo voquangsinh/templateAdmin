@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource('App\Models\Permission');
+    }
+
     /**
      * Display a listing of the resource.
      *

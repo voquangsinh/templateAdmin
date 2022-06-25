@@ -42,6 +42,28 @@
                     </div>
                   </div>
                 </div>
+
+                @if ($categories->count())
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      @foreach ($categories as $category)
+                        <div class="form-check">
+                          <input id="flexCheckCheckedcategory{{$category->id}}" class="form-check-input" 
+                          type="checkbox" value="{{ $category->id }}" name="categoryIds[]"
+                          {{ in_array($category->id, $post->categories->pluck('id')->toArray()) ? "checked" : "" }}>
+                          <label class="form-check-label" for="flexCheckCheckedcategory{{$category->id}}">
+                            {{ $category->title }}
+                          </label>
+                        </div>
+                      @endforeach
+                      @if ($errors->has('description'))
+                      <span class="text-danger">{{ $errors->first('description') }}</span>
+                  @endif
+                    </div>
+                  </div>
+                </div>
+                @endif
                 <button class="btn btn-primary" type="submit">Update Posts</button>
               </form>
         </div>

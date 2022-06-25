@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Category::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('layouts.categories.index', ['categories' => Category::get()]);
     }
 
     /**
@@ -24,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('layouts.categories.create');
     }
 
     /**
@@ -35,7 +41,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            Category::create($request->only(['title', 'description']));
+            return redirect()->route('categories.index')->with('success', 'Create category success');;
+        } catch (\Exception $e) {
+            //throw $th;
+            Log::error($e->getMessage());
+            return back()->with('error', 'Create category failed');
+        }
     }
 
     /**
@@ -46,7 +59,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('layouts.categories.show', ['category' => $category]);
     }
 
     /**
@@ -57,7 +70,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('layouts.categories.edit', ['category' => $category]);
     }
 
     /**
@@ -69,7 +82,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        try {
+            $category->update($request->only(['title', 'description']));
+            return redirect()->route('categories.index')->with('success', 'Update category success');;
+        } catch (\Exception $e) {
+            //throw $th;
+            Log::error($e->getMessage());
+            return back()->with('error', 'Update category failed');
+        }
     }
 
     /**
@@ -80,6 +100,13 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+            return redirect()->route('categories.index')->with('success', 'Delete category success');;
+        } catch (\Exception $e) {
+            //throw $th;
+            Log::error($e->getMessage());
+            return back()->with('error', 'Delete category failed');
+        }
     }
 }

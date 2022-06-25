@@ -41,22 +41,27 @@
                     </div>
                   </div>
                 </div>
+
+                @if ($categories->count())
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      
-                    <select class="form-select" aria-label="Default select example" name="category">
-                        <option selected>Open this select menu</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                      @if ($errors->has('content'))
-                      <span class="text-danger">{{ $errors->first('content') }}</span>
+                      @foreach ($categories as $category)
+                        <div class="form-check">
+                          <input id="flexCheckCheckedcategory{{$category->id}}" class="form-check-input" 
+                          type="checkbox" value="{{ $category->id }}" name="categoryIds[]">
+                          <label class="form-check-label" for="flexCheckCheckedcategory{{$category->id}}">
+                            {{ $category->title }}
+                          </label>
+                        </div>
+                      @endforeach
+                      @if ($errors->has('description'))
+                      <span class="text-danger">{{ $errors->first('description') }}</span>
                   @endif
                     </div>
                   </div>
                 </div>
+                @endif
                 <button class="btn btn-primary" type="submit">Create Posts</button>
               </form>
         </div>

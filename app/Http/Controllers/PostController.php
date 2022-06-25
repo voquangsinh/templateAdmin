@@ -56,7 +56,7 @@ class PostController extends Controller
         
         try {
             $post = Post::create($data);
-            $post->category()->sync($request->category);
+            $post->categories()->sync($request->categoryIds);
             return redirect()->route('posts.index')->with('success', 'Create post successfuly');
         } catch (\Exception $th) {
             //throw $th;
@@ -83,7 +83,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('layouts.posts.edit', ['post' => $post]);
+        return view('layouts.posts.edit', ['post' => $post, 'categories' => Category::get()]);
     }
 
     /**
@@ -105,6 +105,8 @@ class PostController extends Controller
         try {
             
             $post->update($data);
+            $post->categories()->sync($request->categoryIds);
+
             return redirect()->route('posts.index')->with('success', 'Update post successfuly');
         } catch (\Exception $e) {
             throw $e;

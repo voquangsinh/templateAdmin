@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
-class PostPolicy
+class PostPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
@@ -20,7 +20,7 @@ class PostPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array('view_post', $this->getPermissionOfUser($user));
+        return in_array('view_post', $this->getPermissions());
     }
 
     /**
@@ -32,7 +32,7 @@ class PostPolicy
      */
     public function view(User $user, Post $post)
     {
-        return in_array('view_post', $this->getPermissionOfUser($user));
+        return $this->isAuthor($user, $post) || in_array('view_post', $this->getPermissions());
     }
 
     /**
@@ -43,7 +43,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return in_array('create_post', $this->getPermissionOfUser($user));
+        return in_array('create_post', $this->getPermissions());
     }
 
     /**
@@ -55,7 +55,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return in_array('update_post', $this->getPermissionOfUser($user));
+        return $this->isAuthor($user, $post) || in_array('update_post', $this->getPermissions());
     }
 
     /**
@@ -67,7 +67,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        if (!in_array('delete_post', $this->getPermissionOfUser($user))) {
+        if (!$this->isAuthor($user, $post) || !in_array('delete_post', $this->getPermissions())) {
             return back()->with('error', 'User can not delete posts');
             Response::deny('You do not own this post.');
         }
@@ -94,19 +94,19 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return in_array('delete_post', $this->getPermissionOfUser($user));
+        return $this->isAuthor($user, $post) || in_array('delete_post', $this->getPermissions());
     }
 
-    public function getPermissionOfUser(User $user)
+    /**
+     * Check is author of post
+     *
+     * @param User $user user
+     * @param Post $post post
+     *
+     * @return boolean
+     */
+    public function isAuthor(User $user, Post $post)
     {
-        return User::join('role_user', 'users.id', '=', 'role_user.user_id')
-            ->join('roles', 'role_user.role_id', '=', 'roles.id')
-            ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
-            ->join('permissions', 'permission_role.permission_id', '=', 'permissions.id')
-            ->where('users.id', $user->id)
-            ->get([
-                DB::raw('users.id as user_id'),
-                DB::raw('permissions.name as permisison_name'),
-            ])->pluck('permisison_name')->toArray();
+        return $user->id == $post->user_id;
     }
 }

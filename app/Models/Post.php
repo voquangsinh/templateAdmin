@@ -33,7 +33,7 @@ class Post extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function category()
+    public function categories()
     {
         return $this->belongsToMany(Category::class);
     }
