@@ -45,7 +45,7 @@
               @endforeach
             </tbody>
         </table>
-        
+        {{ $permissions->withQueryString()->links() }}
         </div>
         </div>
     </div>

@@ -19,9 +19,9 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $permissions = Permission::get();
+        $permissions = Permission::paginate(5);
         return view('layouts.permissions.index', ['permissions' => $permissions]);
     }
 
