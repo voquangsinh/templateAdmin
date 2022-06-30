@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'first_name',
+        'last_name',
     ];
 
     /**
@@ -41,6 +43,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -75,4 +78,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
 }

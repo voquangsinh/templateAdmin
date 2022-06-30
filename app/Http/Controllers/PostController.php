@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreateNewPost;
 use App\Http\Requests\CreateUpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
@@ -9,6 +10,7 @@ use App\Scopes\IsAuthorPostScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -61,9 +63,11 @@ class PostController extends Controller
         try {
             $post = Post::create($data);
             $post->categories()->sync($request->categoryIds);
+            event(new CreateNewPost($post));
             return redirect()->route('posts.index')->with('success', 'Create post successfuly');
-        } catch (\Exception $th) {
+        } catch (\Exception $e) {
             //throw $th;
+            Log::error($e->getMessage());
             return back()->with('error', 'Create post failed');
         }
     }
